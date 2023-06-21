@@ -1,1 +1,2 @@
-domain_name = "hoangdeps.site"
+domain_name = "hoangdevops.site"
+project = "E-commer"

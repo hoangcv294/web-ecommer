@@ -1,5 +1,6 @@
+#######################-Create SG Server-#######################
 resource "aws_security_group" "ec2_sg" {
-  name        = "EcommerceSecurityGroup"
+  name        = "${var.project}-Allow-SSH"
   description = "Allow SSH"
 
   vpc_id = aws_vpc.ecommerce_vpc.id
@@ -8,7 +9,14 @@ resource "aws_security_group" "ec2_sg" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"] #Replace just one my IP
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["10.240.0.0/16"]
   }
 
   egress {
@@ -19,21 +27,22 @@ resource "aws_security_group" "ec2_sg" {
   }
 
   tags = {
-    Name = "EcommerceSecurityGroup"
+    Name = "Apache Server"
   }
 }
 
-resource "aws_security_group" "ec2_sg" {
-  name        = "EcommerceSecurityGroup"
-  description = "Allow SSH"
+#######################-Create SG ALB-#######################
+resource "aws_security_group" "ecommerce_sg" {
+  name        = "${var.project}-SG"
+  description = "All Traffic"
 
   vpc_id = aws_vpc.ecommerce_vpc.id
 
   ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"] #Replace just one my IP
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {
@@ -44,6 +53,6 @@ resource "aws_security_group" "ec2_sg" {
   }
 
   tags = {
-    Name = "EcommerceSecurityGroup"
+    Name = "${var.project}-SG"
   }
 }

@@ -1,16 +1,16 @@
-#######################-Import R53-#######################
-resource "aws_route53_zone" "hoangdevops" {
-  name = "${var.domain_name}.com"  # Replace with your domain name
+# #######################-Get Data R53-#######################
+data "aws_route53_zone" "hoangdevops" {
+  name = var.domain_name # Replace with your domain name
 }
 
-#######################-Create Record Alias CloudFront-#######################
-resource "aws_route53_record" "route53_record_alias_frontend" {
-  zone_id = data.aws_route53_zone.hostedzone.zone_id
-  name    = "${var.domain_name}"
-  type    = "A"
+#######################-Create Record Alias LoadBalancer-#######################
+resource "aws_route53_record" "route53_record_alias" {
+  zone_id     = data.aws_route53_zone.hoangdevops.zone_id
+  name        = var.domain_name
+  type        = "A"
   alias {
-    name                   = [aws_lb.ecommerce_lb.dns_name]
-    zone_id                = [aws_lb.ecommerce_lb.hosted_zone_id]
+    name                   = aws_lb.ecommerce_lb.dns_name
+    zone_id                = aws_lb.ecommerce_lb.zone_id
     evaluate_target_health = false
   }
 }
