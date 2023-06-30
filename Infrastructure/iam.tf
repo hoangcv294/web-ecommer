@@ -33,6 +33,6 @@ resource "aws_iam_role_policy_attachment" "ecommerce_S3_policy" {
 
 #######################--Create IAM Instance Profile-#######################-
 resource "aws_iam_instance_profile" "e_instance_profile" {
-  name = "Ecommerce-SSMInstanceProfile"
+  name = "Ecommerce-SSMInstanceProfile1"
   role = aws_iam_role.ecommerce_iam_role.name
 }
