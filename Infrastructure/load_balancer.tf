@@ -6,7 +6,7 @@ resource "aws_lb_target_group" "ecommerce_tg" {
   vpc_id   = aws_vpc.ecommerce_vpc.id
 
   health_check {
-    path                = "/wp-admin"
+    path                = "/html"
     protocol            = "HTTP"
     port                = "traffic-port"
     healthy_threshold   = 3
@@ -34,7 +34,7 @@ resource "aws_lb" "ecommerce_lb" {
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.ecommerce_sg.id]
-  subnets            = tolist([aws_subnet.public_subnet_a.id, aws_subnet.public_subnet_b.id, aws_subnet.private_subnet.id])
+  subnets            = tolist([aws_subnet.public_subnet_a.id, aws_subnet.public_subnet_b.id])
 
   tags = {
     Name = "${var.project}-ALB"
@@ -64,7 +64,7 @@ resource "aws_lb_listener" "https" {
   load_balancer_arn = aws_lb.ecommerce_lb.arn
   port              = 443
   protocol          = "HTTPS"
-  certificate_arn = data.aws_acm_certificate.ecommerce_cert.arn
+  certificate_arn   = data.aws_acm_certificate.ecommerce_cert.arn
   default_action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.ecommerce_tg.arn
